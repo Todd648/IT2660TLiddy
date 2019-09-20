@@ -1,38 +1,44 @@
 package com.company;
 
-public class Utilities {
+import javax.swing.text.Keymap;
+
+public class Utilities <T> {
     private int next;
     private int size;
-    private Node[] data;
+    private T[] data;
 
     public Utilities() {
         next =0;
         size = 100;
-        data = new Node[size];
+        data = ( T[] ) new Object[100];
     }
 
     public Utilities(int s) {
         next =0;
-        data = new Node[s];
+        data = (T[]) new Object[s];
         size =s;
     }
-    public boolean insert(Node newNode) {
+    public boolean insert(T newListing) {
+        KeyMode node =(KeyMode) newListing;
         if(next>=size) return false;
-        data[next] = newNode.deepCopy();
+        data[next] = (T) node.deepCopy();
 
         if (data[next]==null) return false;
         next = next + 1;
         return true;
     }
 
-    public Node fetch (String targetKey) {
-        Node node;
-        Node temp;
+    public KeyMode fetch (Object targetKey) {
+        KeyMode node =(KeyMode) data[0];
+        T temp;
 
         int i = 0;
-        while(i < next &&!(data[i].compareTo(targetKey)==0)) { i++;}
+        while(i < next && node.compareTo(targetKey) != 0) {
+            i++;
+            node = (KeyMode) data[i];
+        }
         if (i == next ) return null;
-        node = data[i].deepCopy();
+        node = node.deepCopy();
         if(i !=0) {
             temp = data[i-1];
             data[i-1] = data[i];
@@ -40,9 +46,14 @@ public class Utilities {
         }
         return node;
     }
-    public boolean delete (String targetKey){
+    public boolean delete (Object targetKey){
+        KeyMode node = (KeyMode) data [0];
+
         int i =0;
-        while (i < next & !(data[i].compareTo(targetKey)==0)) {i++;}
+        while (i < next && node.compareTo(targetKey) !=0); {
+            i++;
+            node = (KeyMode) data[i];
+        }
         if (i==next) return false;
         data[i] = data[next -1];
         data[next -1]=null;
@@ -50,8 +61,8 @@ public class Utilities {
         return true;
     }
 
-    public boolean update (String tarketKey, Node newNode) {
-        if(delete(tarketKey) == false) return false;
+    public boolean update (Object targetKey, T newNode) {
+        if(delete(targetKey) == false) return false;
         else if (insert(newNode)==false) return false;
         else return true;
     }
