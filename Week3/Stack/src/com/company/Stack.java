@@ -1,30 +1,31 @@
 package com.company;
 
-public class Stack {
-    private Listing[] data;
+public class Stack <T> {
+    private T[] data;
     private int top;
     private int size;
 
     public Stack() {
         top = -1;
         size = 100;
-        data = new Listing[100];
+        data = (T[]) new Object[100];
     }
 
     public Stack(int n) {
         top = -1;
         size = n;
-        data = new Listing[n];
+        data = (T[]) new Object[n];
     }
-    public boolean push(Listing newNode){
+    public boolean push(T newNode){
+        GenericNode node = (GenericNode) newNode;
         if (top == size-1) return false;
         else {
             top = top +1;
-            data[top] = newNode.deepCopy();
+            data[top] = (T) node.deepCopy();
             return true;
         }
     }
-    public Listing pop() {
+    public T pop() {
         int topLocation;
         if(top==-1) return null;
         else {
